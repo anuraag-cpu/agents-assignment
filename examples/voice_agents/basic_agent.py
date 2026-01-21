@@ -21,7 +21,7 @@ logger = logging.getLogger("basic-agent")
 load_dotenv()
 
 # 1. Configurable Ignore List
-IGNORE_WORDS = {'yeah', 'ok', 'hmm', 'uh-huh', 'right', 'aha', 'okay', 'yep'}
+IGNORE_WORDS = {'yeah', 'ok', 'hmm', 'uh-huh', 'right', 'aha', 'okay', 'yep', 'sure', 'alright', 'Alright' 'mm-hmm', 'gotcha', 'i see', 'understood', 'hello', 'Hello'}
 
 def prewarm(proc: JobProcess):
     proc.userdata["vad"] = silero.VAD.load()
@@ -143,13 +143,28 @@ class MyAgent(Agent):
             else:
                 yield event
 
+    # def _is_agent_speaking(self):
+    #     if hasattr(self, '_activity') and self._activity:
+    #         if self._activity._current_speech and not self._activity._current_speech.future.done():
+    #             return True
+    #         if self._activity._speech_q:
+    #             return True
+    #     return False
+
+
     def _is_agent_speaking(self):
+        """
+        Helper to check if the agent is actively speaking based on the current SpeechHandle.
+        """
         if hasattr(self, '_activity') and self._activity:
-            if self._activity._current_speech and not self._activity._current_speech.future.done():
+            # Check if there is a current speech handle and if it is NOT marked as done
+            if self._activity._current_speech and not self._activity._current_speech.done(): #
                 return True
+            # Also check if there are any speech turns waiting in the queue
             if self._activity._speech_q:
                 return True
         return False
+
 
     def _should_ignore(self, text):
         clean_text = text.strip().lower().translate(str.maketrans('', '', string.punctuation))
