@@ -43,12 +43,12 @@ DEEPGRAM_API_KEY=your_deepgram_key
 GROQ_API_KEY=your_groq_key
 ```
 
-### Installation
+### 3. Installation
 ```python
 pip install -r requirements.txt
 ```
 
-### Running the Agent
+### 4. Running the Agent
 ```python
 python basic_agent.py dev
 ```
